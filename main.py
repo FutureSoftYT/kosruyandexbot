@@ -75,8 +75,12 @@ async def get_document(message: types.Message, state: FSMContext):
         file_size = message.photo[-1].file_size
         if file_size > 20 * 1024 * 1024:
             return await message.answer('Размер файла превышает лимиты телеграмма!')
-        file_name = message.photo[-1].file_id
-        await message.photo[-1].download(destination_file='files/documents/' + file_name)
+        file_id = message.photo[-1].file_id
+        file_name = await bot.get_file(file_id)
+        file_name = file_id + file_name.file_path.split('.')[-1]
+        print(file_name)
+        await message.photo[-1].download(
+            destination_file='files/documents/' + file_name)
 
     if message.video:
         file_name = message.video.file_name
